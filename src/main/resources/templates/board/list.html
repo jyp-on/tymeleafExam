@@ -10,6 +10,25 @@
 
     <div class="container">
       <h2>게시판</h2>
+      <div>총 건수 : <span th:text="${#lists.size(boards)}">list size</span></div>
+      <table class="table caption-top">
+        <thead>
+          <tr>
+            <th scope="col">번호</th>
+            <th scope="col">제목</th>
+            <th scope="col">작성자</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="board : ${boards}">
+            <th th:text="${board.id}">1</th>
+            <td><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}">Mark</a></td>
+            <td >박주영</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-right"><a type="button" class="btn btn-primary" th:href="@{/board/form}">글 작성</a></div>
+      
     </div>
 
   </main>
