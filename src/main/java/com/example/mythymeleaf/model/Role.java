@@ -1,22 +1,23 @@
 package com.example.mythymeleaf.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //db column에서 auto_increament를 사용하면 알아서 값이 알아서 증가
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    private String name; //권한 이름
+    private String name;
 
     @ManyToMany(mappedBy = "roles")
-    private List<User> users = new ArrayList<>();
+    private List<User> users;
 }

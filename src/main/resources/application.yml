@@ -4,9 +4,13 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: myadmin
     password: jyp1399@
+
   jpa:
     open-in-view: false
     generate-ddl: true
     show-sql: true
     hibernate:
       ddl-auto: update
+  mvc:
+    converters:
+      preferred-json-mapper: gson

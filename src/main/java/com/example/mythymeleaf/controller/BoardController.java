@@ -2,6 +2,7 @@ package com.example.mythymeleaf.controller;
 
 import com.example.mythymeleaf.model.Board;
 import com.example.mythymeleaf.repository.BoardRepository;
+import com.example.mythymeleaf.service.BoardService;
 import com.example.mythymeleaf.validator.BoardValidator;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,10 +28,13 @@ public class BoardController {
     private BoardRepository boardRepository;
 
     @Autowired
+    private BoardService boardService;
+
+    @Autowired
     private BoardValidator boardValidator;
 
     @GetMapping("/list")
-    public String list(Model model, @PageableDefault(size = 2, direction = Sort.Direction.DESC) Pageable pageable,
+    public String list(Model model, @PageableDefault(size = 2, direction = Sort.Direction.ASC) Pageable pageable,
                        @RequestParam(required = false, defaultValue = "") String searchText){
         //Page<Board> boards = boardRepository.findAll(pageable);
         Page<Board> boards = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText, pageable);
@@ -56,13 +61,13 @@ public class BoardController {
     }
 
     @PostMapping("/form")
-    public String submit(@Valid Board board, BindingResult bindingResult){ //form태그에서 board객체를 받아옴
+    public String postForm(@Valid Board board, BindingResult bindingResult, Authentication authentication){ //form태그에서 board객체를 받아옴
         boardValidator.validate(board, bindingResult);
         if (bindingResult.hasErrors()) {
             return "board/form";
         }
-
-        boardRepository.save(board); //board에 id가 없을경우 insert, 있으면 update를 자동으로해줌
+        String username = authentication.getName();
+        boardService.save(username, board);
         return "redirect:/board/list"; //list로 redirect하면서 정보를 다시불러옴
     }
 }
